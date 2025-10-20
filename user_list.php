@@ -52,5 +52,6 @@
                 <?php endforeach; ?>
             </tbody>
         </table>
+        <button onclick="window.location.href='index.php';" type="button">Go back</button>
     </body>
 </html>
