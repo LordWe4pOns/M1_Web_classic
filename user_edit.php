@@ -7,7 +7,7 @@
 
     if (isset($_SESSION['user_id']) && isset($_SESSION['user_login']) && isset($_GET['id'])) {
         $id = $_GET['id'];
-        
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $login = $_POST['login'] ?? '';
             $password = $_POST['password'] ?? '';
@@ -73,19 +73,19 @@
         <form method="POST" action="">
         <label for="login">Login :</label>
         <input type="text" id="login" name="login" value="<?= htmlspecialchars($user['user_login']) ?>" required>
-        <br/><br/>
+        <br/>
 
         <label for="password">New password :</label>
         <input type="password" id="password" name="password" placeholder="********">
-        <br/><br/>
+        <br/>
 
         <label for="account_id">Account ID :</label>
         <input type="number" id="account_id" name="account_id" value="<?= htmlspecialchars($user['user_compte_id']) ?>" required>
-        <br/><br/>
+        <br/>
 
         <label for="email">Email :</label>
         <input type="email" id="email" name="email" value="<?= htmlspecialchars($user['user_mail']) ?>" required>
-        <br/><br/>
+        <br/>
 
         <button type="submit">Update</button>
         <button type="button" onclick="window.location.href='user_list.php';">Cancel</button>
