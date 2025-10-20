@@ -1,3 +1,32 @@
+<?php
+session_start();
+require_once 'database.php';
+
+$message = "";
+
+if (isset($_POST['login_submit'])) {
+    $login = $_POST['login'] ?? '';
+    $password = $_POST['password'] ?? '';
+
+    if ($login === '' || $password === '') {
+        $message = "Both fields are required.";
+    } else {
+        $query = "SELECT * FROM user WHERE user_login = :login";
+        $statement = $db->prepare($query);
+        $statement->execute([':login' => $login]);
+        $user = $statement->fetch(PDO::FETCH_ASSOC);
+
+        if ($user && password_verify($password, $user['user_password'])) {
+            $_SESSION['user_id'] = $user['user_id'];
+            $_SESSION['user_login'] = $user['user_login'];
+            header('Location: index.php');
+            exit();
+        } else {
+            $message = "Invalid login or password.";
+        }
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -5,37 +34,8 @@
         <title>Login</title>
     </head>
     <body>
-        <?php
-            require_once 'database.php';
-            session_start(); 
-
-            $message = "";
-
-            if (isset($_POST['login_submit'])) {
-                $login = $_POST['login'];
-                $password = $_POST['password'];
-
-                if (empty($login) || empty($password)) {
-                    die("Both fields are required.");
-                }
-
-                $query = "SELECT * FROM user WHERE user_login = :login";
-                $statement = $db->prepare($query);
-                $statement->execute([':login' => $login]);
-                $user = $statement->fetch(PDO::FETCH_ASSOC);
-
-                if ($user && password_verify($password, $user['user_password'])) {
-                    $_SESSION['user_id'] = $user['user_id'];
-                    $_SESSION['user_login'] = $user['user_login'];
-                    header('Location: index.php');
-                    exit();
-                } else {
-                    $message = "Invalid login or password.";
-                }
-            }
-        ?>
         <h1>Login</h1>
-        <h2><?php echo $message; ?></h2>
+        <h2><?php echo htmlspecialchars($message); ?></h2>
         <form method="POST" action="">
             <label for="login">Login</label>
             <input
