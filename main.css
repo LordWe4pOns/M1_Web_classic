@@ -1,0 +1,19 @@
+* {
+    font-family: Bahnschrift, serif ;
+    font-size: 100%;
+    color: black;
+    empty-cells: hide;
+}
+
+th {
+    font-weight: 600;
+}
+
+td, th {
+    text-align: center;
+    outline: rgb(0, 0, 0) 2px solid;
+}
+
+tbody > tr:hover {
+    background-color: rgba(230,230,230,0.7);
+}
