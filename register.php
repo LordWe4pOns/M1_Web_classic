@@ -7,7 +7,7 @@
     <body>
         <?php
             require_once 'database.php';
-            session_start(); 
+            session_start();
 
             $message = "";
 
@@ -22,7 +22,7 @@
                 }
 
                 $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-                $query = "INSERT INTO users (login, password, account_id, email) 
+                $query = "INSERT INTO user (user_login, user_password, user_compte_id, user_mail) 
                     VALUES (:login, :password, :account_id, :email)";
                 $statement = $db->prepare($query);
                 $statement->execute([
