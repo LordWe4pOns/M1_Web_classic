@@ -19,14 +19,14 @@
                     die("Both fields are required.");
                 }
 
-                $query = "SELECT * FROM users WHERE login = :login";
+                $query = "SELECT * FROM user WHERE user_login = :login";
                 $statement = $db->prepare($query);
                 $statement->execute([':login' => $login]);
                 $user = $statement->fetch(PDO::FETCH_ASSOC);
 
-                if ($user && password_verify($password, $user['password'])) {
-                    $_SESSION['user_id'] = $user['id'];
-                    $_SESSION['user_login'] = $user['login'];
+                if ($user && password_verify($password, $user['user_password'])) {
+                    $_SESSION['user_id'] = $user['user_id'];
+                    $_SESSION['user_login'] = $user['user_login'];
                     header('Location: index.php');
                     exit();
                 } else {
