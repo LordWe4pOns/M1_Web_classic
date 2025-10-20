@@ -17,6 +17,7 @@ $user_login = $_SESSION['user_login'] ?? 'User';
     <body>
         <h1>Welcome to this incredible website, <?php echo htmlspecialchars($user_login); ?> !</h1>
         <button onclick="window.location.href='user_list.php';" type="button">User List</button>
+        <button onclick="window.location.href='produit_list.php';" type="button">Produit List</button>
         <button onclick="window.location.href='logout.php';" type="button">Logout</button>
     </body>
 </html>
