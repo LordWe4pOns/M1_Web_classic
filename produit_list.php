@@ -22,7 +22,9 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_login'])) {
     <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
 </head>
 <body>
-    <button onclick="window.location.href='produit_create.php';" type="button">➕ Add new product</button>
+    <?php if ($_SESSION['admin'] == 1): ?>
+        <button onclick="window.location.href='produit_create.php';" type="button">➕ Add new product</button>
+    <?php endif; ?>
     <table>
         <thead>
         <tr>
