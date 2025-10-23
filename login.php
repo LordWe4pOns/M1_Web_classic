@@ -19,6 +19,7 @@ if (isset($_POST['login_submit'])) {
         if ($user && password_verify($password, $user['user_password'])) {
             $_SESSION['user_id'] = $user['user_id'];
             $_SESSION['user_login'] = $user['user_login'];
+            $_SESSION['admin'] = $user['admin'];
             header('Location: index.php');
             exit();
         } else {
