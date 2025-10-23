@@ -42,11 +42,12 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_login'])) {
 <html lang="en">
 <head>
     <meta charset='UTF-8'>
-    <title>Edit Product</title>
+    <title>Create Product</title>
     <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
 </head>
 <body>
 <form method="POST" action="">
+    <h2><?php echo $message ?></h2>
     <label for="type_p">Type :</label>
     <input type="text" id="type_p" name="type_p" value="" required>
     <br/>
