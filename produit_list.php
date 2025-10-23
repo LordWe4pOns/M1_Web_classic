@@ -33,7 +33,9 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_login'])) {
             <th>Stock</th>
             <th>Date</th>
             <th>Created (timestamp)</th>
-            <th>Actions</th>
+            <?php if ($_SESSION['admin'] == 1): ?>
+                <th>Actions</th>
+            <?php endif; ?>
         </tr>
         </thead>
         <tbody>
@@ -46,10 +48,12 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_login'])) {
                 <td><?= htmlspecialchars($p['stock_p']) ?></td>
                 <td><?= htmlspecialchars($p['date_in']) ?></td>
                 <td><?= htmlspecialchars($p['timeS_in']) ?></td>
-                <td>
-                    <a href="produit_edit.php?id=<?= $p['id_p'] ?>">✏️ Edit</a>
-                    <a href="produit_delete.php?id=<?= $p['id_p'] ?>">🗑️ Delete</a>
-                </td>
+                <?php if ($_SESSION['admin'] == 1): ?>
+                    <td>
+                        <a href="produit_edit.php?id=<?= $p['id_p'] ?>">✏️ Edit</a>
+                        <a href="produit_delete.php?id=<?= $p['id_p'] ?>">🗑️ Delete</a>
+                    </td>
+                <?php endif; ?>
             </tr>
         <?php endforeach; ?>
         </tbody>
