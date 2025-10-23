@@ -20,7 +20,7 @@
             if (!empty($password)) {
                 $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
                 $query = "UPDATE user
-                        SET user_login = :login, user_password = :password, user_compte_id = :account_id, user_mail = :email
+                        SET user_login = :login, user_password = :password, user_mail = :email
                         WHERE user_id = :id";
                 $params = [
                     ':login' => $login,
@@ -32,7 +32,7 @@
             }
             else {
                 $query = "UPDATE user
-                        SET user_login = :login, user_compte_id = :account_id, user_mail = :email
+                        SET user_login = :login, user_mail = :email
                         WHERE user_id = :id";
                 $params = [
                     ':login' => $login,
@@ -49,7 +49,7 @@
             exit();
         }
         else {
-            $query = "SELECT user_id, user_login, user_compte_id, user_mail
+            $query = "SELECT user_id, user_login, user_mail
                     FROM user
                     WHERE user_id = :id";
             $statement = $db->prepare($query);
@@ -77,10 +77,6 @@
 
         <label for="password">New password :</label>
         <input type="password" id="password" name="password" placeholder="********">
-        <br/>
-
-        <label for="account_id">Account ID :</label>
-        <input type="number" id="account_id" name="account_id" value="<?= htmlspecialchars($user['user_compte_id']) ?>" required>
         <br/>
 
         <label for="email">Email :</label>
