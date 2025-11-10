@@ -8,7 +8,7 @@ conn = mysql.connector.connect(
     host="127.0.0.1",
     user="root",
     password="",
-    database="2025_M1"
+    database="2025_m1"
 )
 cursor = conn.cursor()
 
@@ -44,7 +44,7 @@ def generate_products(n=20):
         """, (type_p, designation_p, prix_ht, date_in, timeS_in, stock_p))
 
     conn.commit()
-    print(f"✅ {n} produits ajoutés avec succès.")
+    print(f"{n} produits ajoutés avec succès.")
 
 # Exécution
 #generate_users(10)
