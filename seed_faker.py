@@ -1,3 +1,4 @@
+import datetime
 from faker import Faker
 import mysql.connector
 import random
@@ -28,16 +29,22 @@ fake = Faker("fr_FR")
 
 # Génération de produits
 def generate_products(n=20):
+    categories = ["Électronique", "Bureau", "Maison", "Sport", "Cuisine", "Jardin", "Informatique"]
     for _ in range(n):
-        nom = fake.word().capitalize()
-        description = fake.text(max_nb_chars=200)
-        prix = round(random.uniform(5, 200), 2)
-        categorie = random.choice(["Electronique", "Bureau", "Maison", "Sport", "Vetements"])
-        image = f"{nom.lower()}.jpg"
+        type_p = random.choice(categories)
+        designation_p = fake.word().capitalize() + " " + fake.word()
+        prix_ht = round(random.uniform(5, 500), 2)
+        date_in = datetime.now().strftime("%Y-%m-%d")
+        timeS_in = datetime.now().strftime("%H:%M:%S")
+        stock_p = random.randint(5, 50)
+
         cursor.execute("""
-            INSERT INTO produits (nom, description, prix, categorie, image)
-            VALUES (%s, %s, %s, %s, %s)
-        """, (nom, description, prix, categorie, image))
+            INSERT INTO produit (type_p, designation_p, prix_ht, date_in, timeS_in, stock_p)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        """, (type_p, designation_p, prix_ht, date_in, timeS_in, stock_p))
+
+    conn.commit()
+    print(f"✅ {n} produits ajoutés avec succès.")
 
 # Exécution
 #generate_users(10)
