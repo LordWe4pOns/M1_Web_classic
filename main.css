@@ -1,19 +1,314 @@
-* {
-    font-family: Bahnschrift, serif ;
-    font-size: 100%;
-    color: black;
-    empty-cells: hide;
+/* ========= Variables globales ========= */
+:root {
+    --bg-color: #0f172a;
+    --bg-soft: #111827;
+    --card-bg: #ffffff;
+    --border-soft: #e5e7eb;
+    --primary: #3b82f6;
+    --primary-soft: #dbeafe;
+    --accent: #22c55e;
+    --danger: #ef4444;
+    --text-main: #111827;
+    --text-muted: #6b7280;
+    --radius-lg: 16px;
+    --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.35);
 }
 
-th {
+/* ========= Reset léger ========= */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: var(--text-main);
+}
+
+/* ========= Layout général ========= */
+
+.main-body {
+    min-height: 100vh;
+    background: radial-gradient(circle at top, #1e293b, #020617);
+}
+
+/* conteneur centré */
+.container {
+    width: min(1100px, 100% - 2rem);
+    margin: 2.5rem auto;
+}
+
+/* Barre haute */
+.topbar {
+    background: rgba(15, 23, 42, 0.95);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.5);
+    backdrop-filter: blur(14px);
+    color: #e5e7eb;
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.topbar-title {
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.topbar-title span.logo-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
+}
+
+.topbar-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* ========= Cartes ========= */
+
+.card {
+    background: var(--card-bg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+    padding: 2rem;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.card-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+}
+
+.card-subtitle {
+    margin: 0.25rem 0 0;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+/* ========= Boutons ========= */
+
+.btn {
+    border: none;
+    border-radius: 999px;
+    padding: 0.45rem 0.9rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    text-decoration: none;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.20);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary), #2563eb);
+    color: #f9fafb;
+}
+
+.btn-secondary {
+    background: #e5e7eb;
+    color: #111827;
+}
+
+.btn-danger {
+    background: var(--danger);
+    color: #f9fafb;
+}
+
+.btn-ghost {
+    background: transparent;
+    color: #e5e7eb;
+    border: 1px solid rgba(148, 163, 184, 0.6);
+}
+
+/* ========= Tableaux ========= */
+
+.table-wrapper {
+    border-radius: 14px;
+    border: 1px solid var(--border-soft);
+    overflow: hidden;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+thead {
+    background: #f9fafb;
+}
+
+thead th {
+    text-align: left;
+    padding: 0.75rem 1rem;
     font-weight: 600;
+    color: #4b5563;
+    border-bottom: 1px solid var(--border-soft);
 }
 
-td, th {
-    text-align: center;
-    outline: rgb(0, 0, 0) 2px solid;
+tbody tr:nth-child(even) {
+    background: #f9fafb;
 }
 
-tbody > tr:hover {
-    background-color: rgba(230,230,230,0.7);
+tbody tr:hover {
+    background: #eef2ff;
+}
+
+tbody td {
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid var(--border-soft);
+    vertical-align: middle;
+}
+
+.table-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+}
+
+/* ========= Formulaires ========= */
+
+.form-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+input[type="date"] {
+    border-radius: 999px;
+    border: 1px solid #d1d5db;
+    padding: 0.55rem 0.85rem;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
+
+input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+    background: #eff6ff;
+}
+
+/* ========= Messages / Alertes ========= */
+
+.alert {
+    padding: 0.6rem 0.9rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+}
+
+.alert-error {
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+.alert-success {
+    background: #ecfdf3;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+
+/* ========= Pages d’auth (login / register) ========= */
+
+.auth-body {
+    min-height: 100vh;
+    background: radial-gradient(circle at top, #1d4ed8, #020617);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+}
+
+.auth-card {
+    width: min(420px, 100%);
+    text-align: left;
+}
+
+.auth-header {
+    margin-bottom: 1.5rem;
+}
+
+.auth-title {
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.auth-subtitle {
+    margin: 0.4rem 0 0;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.auth-footer {
+    margin-top: 1.5rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.auth-footer a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+/* ========= Responsif basique ========= */
+
+@media (min-width: 768px) {
+    .form-grid-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }

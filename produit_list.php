@@ -1,65 +1,139 @@
 <?php
-require_once 'database.php';
 session_start();
+require_once 'database.php'; // Connexion PDO ($db)
 
-$products = [];
-
-if (isset($_SESSION['user_id']) && isset($_SESSION['user_login'])) {
-    $query = "SELECT id_p, type_p, designation_p, prix_ht, stock_p, date_in, timeS_in
-                FROM produit";
-    $statement = $db->query($query);
-    $products = $statement->fetchAll(PDO::FETCH_ASSOC);
-} else {
+// Vérifie que l'utilisateur est connecté
+if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
-    exit();
+    exit;
 }
+
+// Requête corrigée selon ta table réelle
+$stmt = $db->prepare("
+    SELECT 
+        id_p,
+        type_p,
+        designation_p,
+        prix_ht,
+        stock_p,
+        date_in,
+        timeS_in
+    FROM produit
+    ORDER BY id_p ASC
+");
+$stmt->execute();
+$produits = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-    <meta charset='UTF-8'>
-    <title>Product List</title>
-    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <meta charset="UTF-8">
+    <title>Liste des produits</title>
+    <link rel="stylesheet" href="main.css">
 </head>
-<body>
-    <?php if ($_SESSION['admin'] == 1): ?>
-        <button onclick="window.location.href='produit_create.php';" type="button">➕ Add new product</button>
-    <?php endif; ?>
-    <table>
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Type</th>
-            <th>Designation</th>
-            <th>Price without taxes</th>
-            <th>Stock</th>
-            <th>Date</th>
-            <th>Created (timestamp)</th>
-            <?php if ($_SESSION['admin'] == 1): ?>
-                <th>Actions</th>
-            <?php endif; ?>
-        </tr>
-        </thead>
-        <tbody>
-        <?php foreach ($products as $p): ?>
-            <tr>
-                <td><?= $p['id_p'] ?></td>
-                <td><?= htmlspecialchars($p['type_p']) ?></td>
-                <td><?= htmlspecialchars($p['designation_p']) ?></td>
-                <td><?= htmlspecialchars($p['prix_ht']) ?></td>
-                <td><?= htmlspecialchars($p['stock_p']) ?></td>
-                <td><?= htmlspecialchars($p['date_in']) ?></td>
-                <td><?= htmlspecialchars($p['timeS_in']) ?></td>
-                <?php if ($_SESSION['admin'] == 1): ?>
-                    <td>
-                        <a href="produit_edit.php?id=<?= $p['id_p'] ?>">✏️ Edit</a>
-                        <a href="produit_delete.php?id=<?= $p['id_p'] ?>">🗑️ Delete</a>
-                    </td>
+<body class="main-body">
+
+<header class="topbar">
+    <div class="topbar-title">
+        <span class="logo-dot"></span>
+        <span>CRUD Dashboard</span>
+    </div>
+    <div class="topbar-actions">
+        <button class="btn btn-ghost" onclick="window.location.href='index.php';">
+            ⬅ Accueil
+        </button>
+        <button class="btn btn-ghost" onclick="window.location.href='logout.php';">
+            ⏻ Déconnexion
+        </button>
+    </div>
+</header>
+
+<main class="container">
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <h1 class="card-title">Produits</h1>
+                <p class="card-subtitle">
+                    Liste complète des produits enregistrés dans la base de données.
+                </p>
+            </div>
+
+            <button
+                    type="button"
+                    class="btn btn-primary"
+                    onclick="window.location.href='produit_create.php';"
+            >
+                ➕ Ajouter un produit
+            </button>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Type</th>
+                    <th>Désignation</th>
+                    <th>Prix HT (€)</th>
+                    <th>Stock</th>
+                    <th>Date</th>
+                    <th>Créé le</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php if (!empty($produits)): ?>
+                    <?php foreach ($produits as $p): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($p['id_p']); ?></td>
+                            <td><?php echo htmlspecialchars($p['type_p']); ?></td>
+                            <td><?php echo htmlspecialchars($p['designation_p']); ?></td>
+                            <td><?php echo htmlspecialchars(number_format($p['prix_ht'], 2, ',', ' ')); ?></td>
+                            <td><?php echo htmlspecialchars($p['stock_p']); ?></td>
+                            <td><?php echo htmlspecialchars($p['date_in']); ?></td>
+                            <td><?php echo htmlspecialchars($p['timeS_in']); ?></td>
+                            <td>
+                                <div class="table-actions">
+                                    <a
+                                            class="btn btn-secondary"
+                                            href="produit_edit.php?id=<?php echo $p['id_p']; ?>"
+                                    >
+                                        ✏️ Modifier
+                                    </a>
+                                    <a
+                                            class="btn btn-danger"
+                                            href="produit_delete.php?id=<?php echo $p['id_p']; ?>"
+                                            onclick="return confirm('Supprimer ce produit ?');"
+                                    >
+                                        🗑️ Supprimer
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="8" style="text-align:center; padding:1rem;">
+                            Aucun produit trouvé.
+                        </td>
+                    </tr>
                 <?php endif; ?>
-            </tr>
-        <?php endforeach; ?>
-        </tbody>
-    </table>
-    <button onclick="window.location.href='index.php';" type="button">Go back</button>
+                </tbody>
+            </table>
+        </div>
+
+        <div style="margin-top: 1.25rem; display:flex; justify-content:flex-end;">
+            <button
+                    type="button"
+                    class="btn btn-secondary"
+                    onclick="window.location.href='index.php';"
+            >
+                ⬅ Retour au tableau de bord
+            </button>
+        </div>
+    </div>
+</main>
+
 </body>
 </html>
