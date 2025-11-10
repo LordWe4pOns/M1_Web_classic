@@ -8,21 +8,31 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-// Requête corrigée selon ta table réelle
-$stmt = $db->prepare("
-    SELECT 
-        id_p,
-        type_p,
-        designation_p,
-        prix_ht,
-        stock_p,
-        date_in,
-        timeS_in
-    FROM produit
-    ORDER BY id_p ASC
-");
+// Récupère le filtre depuis l'URL
+$typeFilter = $_GET['type'] ?? '';
+
+// Prépare la requête avec ou sans filtre
+if (!empty($typeFilter)) {
+    $stmt = $db->prepare("
+        SELECT id_p, type_p, designation_p, prix_ht, stock_p, date_in, timeS_in
+        FROM produit
+        WHERE type_p = :type
+        ORDER BY id_p ASC
+    ");
+    $stmt->bindParam(':type', $typeFilter, PDO::PARAM_STR);
+} else {
+    $stmt = $db->prepare("
+        SELECT id_p, type_p, designation_p, prix_ht, stock_p, date_in, timeS_in
+        FROM produit
+        ORDER BY id_p ASC
+    ");
+}
+
 $stmt->execute();
 $produits = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Récupère la liste distincte des types pour le menu déroulant
+$types = $db->query("SELECT DISTINCT type_p FROM produit ORDER BY type_p ASC")->fetchAll(PDO::FETCH_COLUMN);
 ?>
 
 <!DOCTYPE html>
@@ -51,7 +61,7 @@ $produits = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <main class="container">
     <div class="card">
-        <div class="card-header">
+        <div class="card-header" style="flex-wrap: wrap;">
             <div>
                 <h1 class="card-title">Produits</h1>
                 <p class="card-subtitle">
@@ -59,13 +69,29 @@ $produits = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </p>
             </div>
 
-            <button
-                    type="button"
-                    class="btn btn-primary"
-                    onclick="window.location.href='produit_create.php';"
-            >
-                ➕ Ajouter un produit
-            </button>
+            <div style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center;">
+                <!-- Menu de tri -->
+                <form method="GET" action="produit_list.php" style="display:flex; align-items:center; gap:0.5rem;">
+                    <label for="type" style="font-size:0.9rem;">Trier par type :</label>
+                    <select name="type" id="type" onchange="this.form.submit()" style="border-radius:999px; padding:0.35rem 0.8rem;">
+                        <option value="">Tous les types</option>
+                        <?php foreach ($types as $type): ?>
+                            <option value="<?php echo htmlspecialchars($type); ?>"
+                                <?php if ($type === $typeFilter) echo 'selected'; ?>>
+                                <?php echo htmlspecialchars($type); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </form>
+
+                <button
+                        type="button"
+                        class="btn btn-primary"
+                        onclick="window.location.href='produit_create.php';"
+                >
+                    ➕ Ajouter un produit
+                </button>
+            </div>
         </div>
 
         <div class="table-wrapper">
@@ -115,7 +141,7 @@ $produits = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php else: ?>
                     <tr>
                         <td colspan="8" style="text-align:center; padding:1rem;">
-                            Aucun produit trouvé.
+                            Aucun produit trouvé<?php if (!empty($typeFilter)) echo " pour le type <strong>" . htmlspecialchars($typeFilter) . "</strong>"; ?>.
                         </td>
                     </tr>
                 <?php endif; ?>
